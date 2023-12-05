@@ -1,0 +1,111 @@
+
+{%extends 'base.html'%}
+
+{%block content%}
+{% load static %}
+<script src="{% static 'dashboard.js' %}" ></script>
+<!-- Button trigger modal -->
+<button id="create_app_button" type="button" class="btn btn-success ms-5 mr-5 mt-5" data-toggle="modal" data-target="#exampleModal">
+    Create App
+  </button>
+  
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Create App</h5>
+          <h5 class="ml-5 mt-1 text-success" id="app_created_msg"></h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <div class="modal-body">
+                <div class="form-group">
+                  <label for="app name">App Name</label>
+                  <input style="width: 300px;" type="text" class="form-control" id="new_app_name">
+                </div>
+                <div class="form-group">
+                  <label for="app description"> App Description</label>
+                  <input style="width: 300px;" type="text" class="form-control" id="new_app_description">
+                </div>
+                <button class="btn btn-primary" onclick="create_app()">Submit</button>
+        </div>
+      
+    </div>
+
+    </div>
+  </div>
+
+
+  
+  <!-- edit Modal -->
+  <div class="modal fade" id="update_app" tabindex="-1" role="dialog" aria-labelledby="update_applabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Edit App</h5>
+          <h5 class="ml-5 mt-1 text-success" id="app_edit_msg"></h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <div class="modal-body">
+                <div class="form-group">
+                  <label for="app name">New App Name</label>
+                  <input style="width: 300px;" type="text" class="form-control" id="updated_app_name">
+                </div>
+                <div class="form-group">
+                  <label for="app description">New App Description</label>
+                  <input style="width: 300px;" type="text" class="form-control" id="updated_app_description">
+                </div>
+                <button class="btn btn-primary" id="edit_submit" onclick="update_app()">Submit</button>
+        </div>
+      
+    </div>
+
+    </div>
+  </div>
+
+
+
+<div class="row ms-5 mr-5 mt-5 mb-3">
+    {%for app in apps%}
+      <div class="card col-sm-4" id="app_{{app.id}}">
+        <div class="card-body">
+          <h5 class="card-title">App</h5>
+          <h6 class="card-subtitle mb-2 text-muted">{{app.app_name}}</h6>
+          <p class="card-text">{{app.app_description}}.</p>
+          
+          <select id="app_select_{{app.id}}" onchange="change_selected_plan('{{app.id}}')" class="form-select btn btn-danger mb-2" aria-label="Default select example">
+          
+            {%if app.plan|title == "Plan - 0 Dollars"%}  
+            <option class="bg-danger" data-color="danger" app_id = {{app.id}} selected value="1">$ {{app.plan|title}}</option>
+                <option data-color="info" class="bg-info" app_id = {{app.id}} value="2">$ Plan - 10 Dollars</option>
+                <option data-color="success" class="bg-success" app_id = {{app.id}} value="3">$ Plan - 25 Dollars</option>
+            {%elif app.plan|title == "Plan - 10 Dollars"%}
+           
+            <option class="bg-danger" data-color="danger" selected value="1">$ {{app.plan|title}}</option>
+                <option data-color="info" class="bg-info" value="2">$ Plan - 0 Dollars</option>
+                <option data-color="success" class="bg-success" value="3">$ Plan - 25 Dollars</option>
+            {%else%}    
+           
+            <option class="bg-danger" data-color="danger" selected value="1">$ {{app.plan|title}}</option>
+                <option data-color="info" class="bg-info" value="2">$ Plan - 0 Dollars</option>
+                <option data-color="success" class="bg-success" value="3">$ Plan - 10 Dollars</option>
+            {%endif%}
+            </select>
+          
+        <div class="row">  
+            <button class="col btn btn-warning delete_app_popup_form_button" app_id="{{app.id}}" data-toggle="modal" data-target="#update_app">Edit</button>
+              <button class="col btn btn-danger ms-2" onclick="delete_app('{{app.id}}')" >Delete</button>
+        </div>  
+
+        </div>
+      </div>
+    {%endfor%}
+</div>
+
+{%endblock%}
